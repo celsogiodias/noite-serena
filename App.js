@@ -1,3 +1,4 @@
+// App.js - Noite Serena
 import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
