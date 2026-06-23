@@ -1,99 +1,104 @@
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
+import { Text } from 'react-native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { createStackNavigator } from '@react-navigation/stack';
-import { Text, View, StyleSheet } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
 
 import HomeScreen from '../screens/HomeScreen';
 import CheckinScreen from '../screens/CheckinScreen';
 import ExercisePlayerScreen from '../screens/ExercisePlayerScreen';
-import SleepDiaryScreen from '../screens/SleepDiaryScreen';
 import LibraryScreen from '../screens/LibraryScreen';
+import SleepDiaryScreen from '../screens/SleepDiaryScreen';
 import SettingsScreen from '../screens/SettingsScreen';
-import { theme } from '../theme';
 
-const Tab = createBottomTabNavigator();
-const HomeStack = createStackNavigator();
+const HomeStack = createNativeStackNavigator();
 
 function HomeStackNavigator() {
   return (
     <HomeStack.Navigator screenOptions={{ headerShown: false }}>
       <HomeStack.Screen name="Home" component={HomeScreen} />
       <HomeStack.Screen name="Checkin" component={CheckinScreen} />
-      <HomeStack.Screen
-        name="ExercisePlayer"
-        component={ExercisePlayerScreen}
-        options={{ tabBarStyle: { display: 'none' } }}
-      />
+      <HomeStack.Screen name="ExercisePlayer" component={ExercisePlayerScreen} />
     </HomeStack.Navigator>
   );
 }
 
-function TabIcon({ focused, label, icon }) {
-  return (
-    <View style={styles.iconContainer}>
-      <Text style={[styles.icon, focused && styles.iconFocused]}>{icon}</Text>
-      <Text style={[styles.label, focused && styles.labelFocused]}>{label}</Text>
-    </View>
-  );
-}
+const Tab = createBottomTabNavigator();
 
-export default function AppNavigator() {
+const darkTheme = {
+  ...DefaultTheme,
+  dark: true,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#533483',
+    background: '#1a1a2e',
+    card: '#16213e',
+    text: '#e8e8e8',
+    border: '#0f3460',
+    notification: '#e94560',
+  },
+};
+
+const tabBarStyle = {
+  backgroundColor: '#16213e',
+  borderTopColor: '#0f3460',
+  borderTopWidth: 1,
+};
+
+const tabIconStyle = {
+  fontSize: 22,
+  lineHeight: 26,
+};
+
+function AppNavigator() {
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={darkTheme}>
       <Tab.Navigator
-        screenOptions={({ route }) => ({
+        screenOptions={{
           headerShown: false,
-          tabBarStyle: styles.tabBar,
-          tabBarShowLabel: false,
-          tabBarIcon: ({ focused }) => {
-            const icons = {
-              Início: { icon: '🏠', label: 'Início' },
-              Exercícios: { icon: '📖', label: 'Exercícios' },
-              Diário: { icon: '📊', label: 'Diário' },
-              Ajustes: { icon: '⚙️', label: 'Ajustes' },
-            };
-            const item = icons[route.name];
-            return <TabIcon focused={focused} label={item.label} icon={item.icon} />;
-          },
-        })}
+          tabBarActiveTintColor: '#e94560',
+          tabBarInactiveTintColor: '#a0a0b0',
+          tabBarStyle,
+        }}
       >
-        <Tab.Screen name="Início" component={HomeStackNavigator} />
-        <Tab.Screen name="Exercícios" component={LibraryScreen} />
-        <Tab.Screen name="Diário" component={SleepDiaryScreen} />
-        <Tab.Screen name="Ajustes" component={SettingsScreen} />
+        <Tab.Screen
+          name="Início"
+          component={HomeStackNavigator}
+          options={({ route }) => ({
+            tabBarIcon: () => <Text style={tabIconStyle}>🏠</Text>,
+            tabBarStyle: {
+              ...tabBarStyle,
+              display: getFocusedRouteNameFromRoute(route) === 'ExercisePlayer'
+                ? 'none'
+                : 'flex',
+            },
+          })}
+        />
+        <Tab.Screen
+          name="Exercícios"
+          component={LibraryScreen}
+          options={{
+            tabBarIcon: () => <Text style={tabIconStyle}>📖</Text>,
+          }}
+        />
+        <Tab.Screen
+          name="Diário"
+          component={SleepDiaryScreen}
+          options={{
+            tabBarIcon: () => <Text style={tabIconStyle}>📊</Text>,
+          }}
+        />
+        <Tab.Screen
+          name="Ajustes"
+          component={SettingsScreen}
+          options={{
+            tabBarIcon: () => <Text style={tabIconStyle}>⚙️</Text>,
+          }}
+        />
       </Tab.Navigator>
     </NavigationContainer>
   );
 }
 
-const styles = StyleSheet.create({
-  tabBar: {
-    backgroundColor: theme.colors.surface,
-    borderTopColor: theme.colors.primary,
-    borderTopWidth: 1,
-    height: 72,
-    paddingBottom: 8,
-  },
-  iconContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  icon: {
-    fontSize: 22,
-    opacity: 0.6,
-  },
-  iconFocused: {
-    opacity: 1,
-  },
-  label: {
-    color: theme.colors.textSecondary,
-    fontSize: 10,
-    marginTop: 2,
-  },
-  labelFocused: {
-    color: theme.colors.accent,
-    fontWeight: '600',
-  },
-});
-
+export default AppNavigator;
