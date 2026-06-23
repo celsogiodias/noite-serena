@@ -14,12 +14,12 @@ import {
 
 // Substitua pelas variáveis de ambiente do Expo (app.config.js ou .env)
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY || 'FIREBASE_API_KEY',
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN || 'FIREBASE_AUTH_DOMAIN',
-  projectId: process.env.FIREBASE_PROJECT_ID || 'FIREBASE_PROJECT_ID',
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET || 'FIREBASE_STORAGE_BUCKET',
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID || 'FIREBASE_MESSAGING_SENDER_ID',
-  appId: process.env.FIREBASE_APP_ID || 'FIREBASE_APP_ID',
+  apiKey: "AIzaSyBRqcHtP5pSdI8aSFvQScs9I48stqd4Ksk",
+  authDomain: "noite-serena.firebaseapp.com",
+  projectId: "noite-serena",
+  storageBucket: "noite-serena.firebasestorage.app",
+  messagingSenderId: "904962423360",
+  appId: "1:904962423360:web:83f1c1a498914f20a8bda5"
 };
 
 const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
